@@ -110,6 +110,7 @@ static const unsigned SET_DIO_9557 = 155;
 static const unsigned INIT_9557 = 156;
 static const unsigned SET_VCC = 177;
 static const unsigned WIFI_STATUS = 178;
+static const unsigned ENTER_BOOTSEL = 179;
 static const unsigned INIT_ANALOG = 201;
 static const unsigned DAC80004 = 202;
 static const unsigned GET_CAL_CONSTANTS = 203;

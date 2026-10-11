@@ -158,6 +158,10 @@ void handle_command(uint8_t *buf, mm_reply_fn reply)
         break;
       }
 #endif
+      // Restart as the RPI-RP2 drive so flash.py can load new firmware without
+      // anyone holding the BOOTSEL button. Honoured over USB only, so nothing
+      // on the network can take the box out of service.
+      case ENTER_BOOTSEL: { if (reply == usb_reply) reset_usb_boot(0, 0); break; }
       case PING: { prb = ping_it(); reply(prb, 4); break; }
       default: { break; }
     }

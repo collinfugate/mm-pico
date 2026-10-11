@@ -13,10 +13,13 @@ Two boards are supported:
 
 ## Flash a box
 
-You need Python 3.8 or newer and a USB cable that carries data.
+You need Python 3.8 or newer and a USB cable that carries data. Many
+micro-USB cables only carry power, and with one of those nothing appears.
 
-1. Hold the **BOOTSEL** button on the Pico and plug in the USB cable. It shows
-   up as a drive called `RPI-RP2`.
+1. Plug the box in over USB. A box that already runs this firmware needs
+   nothing more. For a new Pico, or one running something else, hold the
+   **BOOTSEL** button while plugging in so it shows up as a drive called
+   `RPI-RP2`.
 2. Double-click `flash.bat` on Windows or `flash.command` on macOS.
 3. Pick the board. For a Pico W, type the Wi-Fi name and password when asked.
 
@@ -32,6 +35,10 @@ python flash.py pico_w --ssid "Lab WiFi" --password "secret123"
 
 A release zip already contains compiled images in `prebuilt/`, so flashing
 from it needs no compiler. A plain checkout of this repository compiles first.
+
+Switching a running box into flashing mode without the button uses the
+`pyserial` package, which the Multi-Metrics app already installs. Without it
+the script simply asks you to use the BOOTSEL button.
 
 macOS may refuse to open `flash.command` the first time because it was
 downloaded. Right-click it and choose Open.

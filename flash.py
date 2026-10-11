@@ -7,13 +7,16 @@
     python flash.py pico_w --build   compile src/ first, then flash
     python flash.py all --build-only compile both images, flash nothing
 
-To flash, hold the BOOTSEL button on the Pico while plugging in its USB cable.
+A box that already runs this firmware and is plugged in over USB is switched
+into flashing mode automatically (this part uses pyserial when it is
+installed). Otherwise hold the BOOTSEL button on the Pico while plugging in
+its USB cable.
 
 Compiling needs the Pico SDK and an ARM compiler. The first build downloads
 pinned versions of both into ~/.pico-sdk, the same folder and layout the
 Raspberry Pi Pico VS Code extension uses, so the two share one install.
 
-Needs Python 3.8 or newer and nothing outside the standard library.
+Needs Python 3.8 or newer. Nothing outside the standard library is required.
 """
 import argparse
 import os
@@ -87,6 +90,8 @@ else:
 # UF2 image. Flashing without Wi-Fi details leaves that area untouched, so the
 # box keeps its settings across firmware updates.
 WIFI_ADDRESS = 0x10000000 + 2 * 1024 * 1024 - 4096
+USB_ID = (0xCAFE, 0x4005)       # vendor and product id in src/usb_descriptors.c
+ENTER_BOOTSEL = 179             # op code in src/mm.h
 WIFI_MAGIC = b"MMWF"
 UF2_HEADER = "<8I"
 UF2_MAGIC = (0x0A324655, 0x9E5D5157, 0x0AB16F30)
@@ -368,8 +373,33 @@ def find_bootsel():
     return None
 
 
+def request_bootsel():
+    """Ask a running box on USB to restart into BOOTSEL mode. True if asked."""
+    try:
+        import serial
+        from serial.tools import list_ports
+    except ImportError:
+        return False
+    for port in list_ports.comports():
+        if (port.vid, port.pid) != USB_ID:
+            continue
+        try:
+            with serial.Serial(port.device, 115200, timeout=0.2) as link:
+                link.write(bytes([ENTER_BOOTSEL]))
+        except (OSError, serial.SerialException):
+            pass                    # the port vanishes as the box restarts
+        return True
+    return False
+
+
 def wait_for_bootsel(seconds=180):
     drive = find_bootsel()
+    if not drive and request_bootsel():
+        say("Asked the box to restart into flashing mode...")
+        deadline = time.time() + 8
+        while not drive and time.time() < deadline:
+            time.sleep(0.5)
+            drive = find_bootsel()
     if not drive:
         say()
         say("Waiting for the Pico. Hold its BOOTSEL button while plugging in the USB cable.")
