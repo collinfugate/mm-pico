@@ -1,7 +1,5 @@
 #include "mm.h"
 #include <math.h>
-// #include "C:/Pico/pico-sdk/src/rp2_common/hardware_spi/include/hardware/spi.h"
-// #include "C:/Pico/pico-sdk/src/rp2_common/hardware_i2c/include/hardware/i2c.h"
 
 
 uint8_t uart_rd_buf[32] = {0};

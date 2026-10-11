@@ -1,0 +1,9 @@
+* text=auto
+*.bat text eol=crlf
+*.command text eol=lf
+*.py text eol=lf
+
+# Left out of the downloadable release bundle.
+.github export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore

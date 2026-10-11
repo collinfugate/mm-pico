@@ -4,11 +4,8 @@
 #include "hardware/uart.h"
 #include "hardware/irq.h"
 #include "pico/binary_info.h"
-//#include "C:/Pico/pico-sdk/src/rp2_common/hardware_spi/include/hardware/spi.h"
-//#include "C:/Pico/pico-sdk/src/rp2_common/hardware_i2c/include/hardware/i2c.h"
 #include "hardware/spi.h"
 #include "hardware/i2c.h"
-#include "boards/pico.h"
 
 #define UART_ID uart0
 #define USER_UART_ID uart1
