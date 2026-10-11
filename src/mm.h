@@ -111,6 +111,9 @@ static const unsigned INIT_9557 = 156;
 static const unsigned SET_VCC = 177;
 static const unsigned WIFI_STATUS = 178;
 static const unsigned ENTER_BOOTSEL = 179;
+static const unsigned WIFI_SET_NAME = 180;      // [180, name bytes...]
+static const unsigned WIFI_SET_PASSWORD = 181;  // [181, password bytes...]
+static const unsigned WIFI_SAVE = 182;          // store both, reply [1 = ok], restart
 static const unsigned INIT_ANALOG = 201;
 static const unsigned DAC80004 = 202;
 static const unsigned GET_CAL_CONSTANTS = 203;

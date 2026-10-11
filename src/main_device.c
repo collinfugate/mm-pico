@@ -91,7 +91,7 @@ static void usb_reply(const void *data, uint32_t len)
 void tud_cdc_rx_cb(uint8_t itf)
 {
   (void) itf;
-  uint8_t buf[64];
+  uint8_t buf[64] = {0};   // zero filled, so short text commands end cleanly
   uint32_t count = tud_cdc_read(buf, sizeof(buf));
   if (count > 0)
   {
@@ -155,6 +155,14 @@ void handle_command(uint8_t *buf, mm_reply_fn reply)
         static uint8_t wifi_buf[8];
         wifi_status(wifi_buf);
         reply(wifi_buf, 8);
+        break;
+      }
+      case WIFI_SET_NAME: { wifi_set_name(&buf[1], 63); break; }
+      case WIFI_SET_PASSWORD: { wifi_set_password(&buf[1], 63); break; }
+      case WIFI_SAVE: {
+        static uint8_t saved[4];
+        saved[0] = wifi_save();
+        reply(saved, 4);
         break;
       }
 #endif
