@@ -52,7 +52,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          bundle="mm-pico-firmware-${GITHUB_REF_NAME}"
+          bundle="mm-pico-${GITHUB_REF_NAME}"
           git archive --format=tar --prefix="$bundle/" HEAD | tar -x
           mkdir "$bundle/prebuilt"
           cp prebuilt/*.uf2 "$bundle/prebuilt/"
