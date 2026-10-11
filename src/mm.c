@@ -1,5 +1,8 @@
 #include "mm.h"
 #include <math.h>
+#if MM_WIFI
+#include "wifi.h"
+#endif
 
 
 uint8_t uart_rd_buf[32] = {0};
@@ -108,27 +111,35 @@ void init_ANALOG(void)
     init_DAC8552();
 }
 
+void pico_led_init(void) {
+#ifdef PICO_DEFAULT_LED_PIN
+    gpio_init(PICO_DEFAULT_LED_PIN);
+    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+#endif
+}
+
+void pico_led_put(bool on) {
+#if defined(PICO_DEFAULT_LED_PIN)
+    gpio_put(PICO_DEFAULT_LED_PIN, on);
+#elif MM_WIFI
+    wifi_led_put(on);
+#endif
+}
+
 void blink_it(uint16_t msec) {
-#ifndef PICO_DEFAULT_LED_PIN
-#warning blink example requires a board with a regular LED
-#else
-    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
     const uint fp_LED = 22;
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
     gpio_init(fp_LED);
     gpio_set_dir(fp_LED, GPIO_OUT);
     for (int i=0; i<8; i++) {
-        gpio_put(LED_PIN, 1);
+        pico_led_put(1);
         gpio_put(fp_LED, 1);
         sleep_ms(msec);
         gpio_put(fp_LED, 0);
-        gpio_put(LED_PIN, 0);
+        pico_led_put(0);
         sleep_ms(msec);
     }
-    gpio_put(LED_PIN, 1); // make sure it's on when you leave this function
+    pico_led_put(1); // make sure it's on when you leave this function
     gpio_put(fp_LED, 1);
-#endif
 }
 
 // -------------- GPIO functions -----------------

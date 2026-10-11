@@ -109,6 +109,7 @@ static const unsigned SET_RANGE_RELAYS_SMU2 = 154;
 static const unsigned SET_DIO_9557 = 155;
 static const unsigned INIT_9557 = 156;
 static const unsigned SET_VCC = 177;
+static const unsigned WIFI_STATUS = 178;
 static const unsigned INIT_ANALOG = 201;
 static const unsigned DAC80004 = 202;
 static const unsigned GET_CAL_CONSTANTS = 203;
@@ -123,6 +124,12 @@ static const unsigned READ_ADS1115 = 255;
 static int S1_VFO = 1049; // 0.032 * 32k
 static int S1_VFG = 1;
 
+// Runs one command. Replies go through `reply`, so USB and Wi-Fi share one decoder.
+typedef void (*mm_reply_fn)(const void *data, uint32_t len);
+void handle_command(uint8_t *buf, mm_reply_fn reply);
+// Onboard LED: a plain pin on the Pico, part of the Wi-Fi chip on the Pico W.
+void pico_led_init(void);
+void pico_led_put(bool on);
 uint8_t *model(uint8_t *buf);
 //void init_RELAYS(void);
 void init_PICO_GPIO(void);

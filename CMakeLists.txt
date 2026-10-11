@@ -63,6 +63,17 @@ target_link_libraries(${target_name} PRIVATE
     hardware_i2c
 )
 
+# Boards with the Wi-Fi chip (Pico W) also get the network link in src/wifi.c.
+# The plain Pico image contains none of it.
+if(PICO_CYW43_SUPPORTED)
+    target_sources(${target_name} PRIVATE src/wifi.c)
+    target_compile_definitions(${target_name} PRIVATE
+        MM_WIFI=1
+        CYW43_HOST_NAME="multimetrics"   # the name routers show for the box
+    )
+    target_link_libraries(${target_name} PRIVATE pico_cyw43_arch_lwip_poll)
+endif()
+
 # Print memory usage at link time
 target_link_options(${target_name} PRIVATE -Xlinker --print-memory-usage)
 
